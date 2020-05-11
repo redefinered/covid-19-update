@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card } from 'react-bootstrap';
 
+import './field.styles.css';
+
 const Field = ({ title, value, color }) => {
   const formatNumber = (num) => {
     if (!num) return 0;
@@ -10,8 +12,10 @@ const Field = ({ title, value, color }) => {
   return (
     <Card text="white" bg={color} className="mb-4">
       <Card.Body className="text-center my-4">
-        <Card.Title>{title}</Card.Title>
-        <Card.Text>{formatNumber(value)}</Card.Text>
+        <Card.Title>
+          <strong>{title}</strong>
+        </Card.Title>
+        <Card.Text className="figure">{formatNumber(value)}</Card.Text>
       </Card.Body>
     </Card>
   );

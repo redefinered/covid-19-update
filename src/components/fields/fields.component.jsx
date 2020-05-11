@@ -10,8 +10,8 @@ const Fields = ({ country, data }) => {
   const includedFields = [
     { key: 'cases', label: 'Total Cases', variant: 'info' },
     { key: 'todayCases', label: 'New Cases', variant: 'warning' },
-    { key: 'deaths', label: 'Deaths', variant: 'danger' },
-    { key: 'recovered', label: 'Recoveries', variant: 'success' }
+    { key: 'deaths', label: 'Total Deaths', variant: 'danger' },
+    { key: 'recovered', label: 'Total Recoveries', variant: 'success' }
   ];
 
   return (

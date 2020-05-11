@@ -27,7 +27,9 @@ class Time extends React.Component {
     const { time } = this.state;
     return (
       <div className="time">
-        <p>{`As of ${time.format('dddd, D MMM YYYY')} ${time.format('hh:mm:ss A')}`}</p>
+        <p>
+          As of <strong>{`${time.format('dddd, D MMM YYYY')} ${time.format('hh:mm:ss A')}`}</strong>
+        </p>
       </div>
     );
   }
