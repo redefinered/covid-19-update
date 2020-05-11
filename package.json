@@ -1,6 +1,6 @@
 {
   "name": "covid-19-update",
-  "version": "1.0.1-beta.5",
+  "version": "1.0.1-beta.6",
   "private": true,
   "homepage": "https://redefinered.github.io/covid-19-update",
   "dependencies": {
