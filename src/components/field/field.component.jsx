@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card } from 'react-bootstrap';
 
-const Field = ({ title, value }) => {
+const Field = ({ title, value, color }) => {
   const formatNumber = (num) => {
+    if (!num) return 0;
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
   };
   return (
-    <Card>
+    <Card text="white" bg={color}>
       <Card.Body className="text-center my-4">
         <Card.Title>{title}</Card.Title>
         <Card.Text>{formatNumber(value)}</Card.Text>
@@ -18,7 +19,8 @@ const Field = ({ title, value }) => {
 
 Field.propTypes = {
   title: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired
+  value: PropTypes.number.isRequired,
+  color: PropTypes.string.isRequired
 };
 
 export default Field;

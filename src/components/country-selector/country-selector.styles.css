@@ -1,0 +1,5 @@
+.dropdown-menu ul {
+  max-height: 300px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}

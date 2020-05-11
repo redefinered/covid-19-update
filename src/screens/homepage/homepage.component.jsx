@@ -1,8 +1,9 @@
 import React from 'react';
 import Loader from 'components/loader.component';
+import CountrySelector from 'components/country-selector/country-selector.component';
 import Time from 'components/time/time.component';
 import Fields from 'components/fields/fields.component';
-import { Container, Jumbotron, Dropdown } from 'react-bootstrap';
+import { Container, Jumbotron } from 'react-bootstrap';
 import axios from 'axios';
 import './homepage.styles.css';
 
@@ -22,8 +23,8 @@ class Homepage extends React.Component {
     });
   }
 
-  handleChange = (event) => {
-    console.log(event.target.value);
+  handleSelect = (event) => {
+    this.setState({ country: event });
   };
 
   render() {
@@ -39,17 +40,7 @@ class Homepage extends React.Component {
             This page updates everyday so you stay updated on the global situation regarding the
             Coronovirus pandemic
           </p>
-          <Dropdown>
-            <Dropdown.Toggle variant="success" id="dropdown-basic">
-              {country}
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu onChange={this.handleChange}>
-              <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          <CountrySelector data={data} handleSelect={this.handleSelect} selectedCountry={country} />
         </Jumbotron>
         <Fields country={country} data={data} />
         <footer className="py-3">

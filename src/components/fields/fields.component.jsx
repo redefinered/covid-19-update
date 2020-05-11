@@ -6,25 +6,26 @@ import find from 'lodash/find';
 
 const Fields = ({ country, data }) => {
   const selectedItem = find(data, (d) => d.country === country);
-  console.log('x', selectedItem);
   const fields = Object.keys(selectedItem);
-  const include = ['cases', 'todayCases', 'deaths', 'recovered'];
-  const titles = {
-    cases: 'Total Cases',
-    todayCases: 'New Cases',
-    deaths: 'Deaths',
-    recovered: 'Recoveries'
-  };
+  const includedFields = [
+    { key: 'cases', label: 'Total Cases', variant: 'info' },
+    { key: 'todayCases', label: 'New Cases', variant: 'warning' },
+    { key: 'deaths', label: 'Deaths', variant: 'danger' },
+    { key: 'recovered', label: 'Recoveries', variant: 'success' }
+  ];
 
   return (
     <React.Fragment>
       <Row>
         {/* eslint-disable-next-line array-callback-return */}
         {fields.map((field) => {
-          if (include.includes(field)) {
+          let include = find(includedFields, (o) => {
+            return o.key === field;
+          });
+          if (include !== undefined) {
             return (
               <Col key={field}>
-                <Field title={titles[field]} value={selectedItem[field]} />
+                <Field title={include.label} value={selectedItem[field]} color={include.variant} />
               </Col>
             );
           }
