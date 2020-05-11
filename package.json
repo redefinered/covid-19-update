@@ -2,7 +2,7 @@
   "name": "covid-19-update",
   "version": "1.0.1-beta.8",
   "private": true,
-  "homepage": "https://redefinered.github.io/covid-19-update",
+  "homepage": "http://simplecovid19updates.com",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
