@@ -44,7 +44,9 @@ class Homepage extends React.Component {
         </Jumbotron>
         <Fields country={country} data={data} />
         <footer className="py-3">
-          <p> &copy; SimpleSoft</p>
+          <p className="text-muted">
+            &copy; SimpleSoft | {`Version: ${process.env.REACT_APP_VERSION}`}
+          </p>
         </footer>
       </Container>
     );
