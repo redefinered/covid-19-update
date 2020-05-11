@@ -8,7 +8,7 @@ const Field = ({ title, value, color }) => {
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
   };
   return (
-    <Card text="white" bg={color}>
+    <Card text="white" bg={color} className="mb-4">
       <Card.Body className="text-center my-4">
         <Card.Title>{title}</Card.Title>
         <Card.Text>{formatNumber(value)}</Card.Text>

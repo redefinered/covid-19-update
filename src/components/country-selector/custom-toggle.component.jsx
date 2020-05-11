@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <button
-    className="btn btn-primary dropdown-toggle"
+    className="btn btn-primary dropdown-toggle btn-lg"
     type="button"
     ref={ref}
     onClick={(e) => {
