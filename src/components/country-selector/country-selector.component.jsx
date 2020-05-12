@@ -40,9 +40,7 @@ const CountrySelector = ({ data, handleSelect, selectedCountry, handleSearch, se
       <Dropdown.Menu>
         <div className="px-4 my-2">
           <Form.Control
-            onChange={function (event) {
-              handleSearch(event);
-            }}
+            onChange={(e) => handleSearch(e)}
             type="search"
             placeholder="Search your country..."
           />
