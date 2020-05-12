@@ -12,7 +12,8 @@ class Homepage extends React.Component {
     super(props);
     this.state = {
       data: [],
-      country: 'World'
+      country: 'World',
+      searchString: ''
     };
   }
 
@@ -24,11 +25,16 @@ class Homepage extends React.Component {
   }
 
   handleSelect = (event) => {
-    this.setState({ country: event });
+    this.setState({ country: event.target.getAttribute('value') });
+  };
+
+  handleSearch = (event) => {
+    console.log(event.target.value)
+    this.setState({ searchString: event.target.value });
   };
 
   render() {
-    const { data, country } = this.state;
+    const { data, country, searchString } = this.state;
     if (data.length === 0) return <Loader />;
     // console.log('data', data);
     return (
@@ -40,7 +46,13 @@ class Homepage extends React.Component {
             This page updates everyday so you stay updated on the global situation regarding the
             Coronovirus pandemic
           </p>
-          <CountrySelector data={data} handleSelect={this.handleSelect} selectedCountry={country} />
+          <CountrySelector
+            data={data}
+            handleSelect={this.handleSelect}
+            selectedCountry={country}
+            handleSearch={this.handleSearch}
+            searchString={searchString}
+          />
         </Jumbotron>
         <Fields country={country} data={data} />
         <footer className="py-3">

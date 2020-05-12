@@ -1,5 +1,9 @@
-.dropdown-menu ul {
+.dropdown-menu-list {
   max-height: 300px;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+.dropdown-menu input[type="search"]::placeholder {
+  font-size: .8rem;
 }
