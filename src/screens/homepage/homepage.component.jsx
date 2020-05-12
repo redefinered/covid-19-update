@@ -29,7 +29,6 @@ class Homepage extends React.Component {
   };
 
   handleSearch = (event) => {
-    console.log(event.target.value)
     this.setState({ searchString: event.target.value });
   };
 
