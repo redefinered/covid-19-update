@@ -6,12 +6,13 @@ import Form from 'react-bootstrap/Form';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
 import sortBy from 'lodash/sortBy';
+import clone from 'lodash/clone';
 
 import './country-selector.styles.css';
 
 const CountrySelector = ({ data, handleSelect, selectedCountry, handleSearch, searchString }) => {
   let dropdownItems = [];
-  let filteredData = filter(data, (o) => includes(o.country.toLowerCase(), searchString));
+  let filteredData = filter(clone(data), (o) => includes(o.country.toLowerCase(), searchString));
 
   // sort by country alphabetical
   filteredData = sortBy(filteredData, (o) => o.country);
@@ -31,7 +32,7 @@ const CountrySelector = ({ data, handleSelect, selectedCountry, handleSearch, se
   });
   return (
     <Dropdown>
-      <Dropdown.Toggle variant="primary" id="dropdown-basic">
+      <Dropdown.Toggle className="btn-lg" variant="primary" id="dropdown-basic">
         {selectedCountry}
       </Dropdown.Toggle>
 
