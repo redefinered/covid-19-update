@@ -1,0 +1,13 @@
+.content-wrap-main {
+  padding-left: 30px;
+}
+
+.chart-container {
+  position: relative;
+  
+  .element {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}

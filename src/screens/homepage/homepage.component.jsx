@@ -1,27 +1,39 @@
 import React from 'react';
-import Loader from 'components/loader.component';
-import CountrySelector from 'components/country-selector/country-selector.component';
-import Time from 'components/time/time.component';
-import Fields from 'components/fields/fields.component';
-import { Container, Jumbotron } from 'react-bootstrap';
+import Chart from 'components/chart/chart.component';
+import NewCases from 'components/new-cases/new-cases.component';
+import { Container, Col, Row } from 'react-bootstrap';
+// import * as d3 from 'd3';
 import axios from 'axios';
-import './homepage.styles.css';
+import './homepage.styles.scss';
+
+const { REACT_APP_VERSION, REACT_APP_GEOLOCATION_DB_API_KEY } = process.env;
 
 class Homepage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
-      country: 'World',
+      newCases: [],
+      country: null,
       searchString: ''
     };
+    // this.canvas = React.createRef();
   }
 
   componentDidMount() {
+    // console.log('xxxx', this.graphContainer.clientWidth);
+    // get new cases today
     axios.get('https://coronavirus-19-api.herokuapp.com/countries').then((response) => {
-      let data = response.data;
-      this.setState({ data });
+      let newCases = response.data;
+      this.setState({ newCases });
     });
+
+    // get user location
+    axios
+      .get(`https://geolocation-db.com/json/${REACT_APP_GEOLOCATION_DB_API_KEY}`)
+      .then((response) => {
+        console.log('location', response.data);
+        this.setState({ country: response.data.country_name || 'World' });
+      });
   }
 
   handleSelect = (event) => {
@@ -33,29 +45,31 @@ class Homepage extends React.Component {
   };
 
   render() {
-    const { data, country, searchString } = this.state;
-    if (data.length === 0) return <Loader />;
-    // console.log('data', data);
+    const { newCases, country, searchString } = this.state;
+
     return (
       <Container fluid>
-        <Jumbotron className="mt-3">
-          <h1>Covid-19 Updates</h1>
-          <Time />
-          <p className="lead">
-            This page updates everyday so you stay updated on the global situation regarding the
-            Coronovirus pandemic
-          </p>
-          <CountrySelector
-            data={data}
-            handleSelect={this.handleSelect}
-            selectedCountry={country}
-            handleSearch={this.handleSearch}
-            searchString={searchString}
-          />
-        </Jumbotron>
-        <Fields country={country} data={data} />
+        <Row>
+          <Col lg="10" className="main">
+            <Row>
+              <Col lg="4">
+                <NewCases
+                  data={newCases}
+                  handleSelect={this.handleSelect}
+                  country={country}
+                  handleSearch={this.handleSearch}
+                  searchString={searchString}
+                />
+              </Col>
+              <Col lg="8">{country ? <Chart country={country} /> : null}</Col>
+            </Row>
+          </Col>
+          <Col lg="2" className="sidebar">
+            {/* sidebar here */}
+          </Col>
+        </Row>
         <footer className="py-3">
-          <p className="text-muted">&copy; reddeguzman | {`v${process.env.REACT_APP_VERSION}`}</p>
+          <p className="text-muted">&copy; reddeguzman | {`v${REACT_APP_VERSION}`}</p>
         </footer>
       </Container>
     );
