@@ -2,14 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Loader from 'components/loader.component';
 import Time from 'components/time/time.component';
-import CountrySelector from 'components/country-selector/country-selector.component';
 import Fields from 'components/fields/fields.component';
 
 class RecentCases extends React.Component {
   render() {
-    const { data, handleSelect, country, handleSearch, searchString } = this.props;
-
-    if (data.length === 0 || !country) return <Loader />;
+    const { data, country } = this.props;
 
     return (
       <div>
@@ -19,16 +16,7 @@ class RecentCases extends React.Component {
           This page updates everyday so you stay updated on the global situation regarding the
           Coronovirus pandemic
         </p>
-        <div className="mb-3">
-          <CountrySelector
-            data={data}
-            handleSelect={handleSelect}
-            selectedCountry={country}
-            handleSearch={handleSearch}
-            searchString={searchString}
-          />
-        </div>
-        <Fields country={country} data={data} />
+        {data.length === 0 || !country ? <Loader /> : <Fields country={country} data={data} />}
       </div>
     );
   }

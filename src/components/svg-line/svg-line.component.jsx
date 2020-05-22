@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { select, scaleTime, scaleLinear, extent, min, max, line } from 'd3';
+import { select, scaleTime, scaleLinear, extent, min, max, line, curveCardinal } from 'd3';
+import { colors } from 'theme';
 
 const SVGLine = ({
   field,
@@ -11,14 +12,12 @@ const SVGLine = ({
   color
 }) => {
   let element = React.createRef();
-  const key = 'svg-line';
-  // let field = 'Confirmed';
 
   useEffect(() => {
-    select(`svg#${key}`).remove();
+    select(`svg#${field.toLowerCase()}`).remove();
     const width = configuredWidth - margin.left - margin.right;
     const height = configuredHeight - margin.top - margin.bottom;
-    const svgdocument = select(element).append('svg').attr('id', `${key}`);
+    const svgdocument = select(element).append('svg').attr('id', `${field.toLowerCase()}`);
 
     const svg = svgdocument
       .attr('width', width + margin.left + margin.right)
@@ -38,15 +37,16 @@ const SVGLine = ({
     );
     y.domain([
       min(lineData, function (d) {
-        return d[field];
+        return d.Confirmed;
       }),
       max(lineData, function (d) {
-        return d[field];
+        return d.Confirmed;
       })
     ]);
 
     // draw lines
     let dataLine = line()
+      .curve(curveCardinal)
       .defined(function (d) {
         return d[field]; // return true if Confirmed ket is defined or not equal to null
       })
@@ -61,10 +61,9 @@ const SVGLine = ({
       .append('path')
       .datum(lineData)
       .attr('fill', 'none')
-      .attr('stroke', color)
+      .attr('stroke', colors[field])
       .attr('stroke-width', 2)
       .attr('d', dataLine);
-
   }, [lineData, configuredWidth, configuredHeight, margin, element, field, color]);
 
   return (

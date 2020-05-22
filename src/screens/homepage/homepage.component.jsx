@@ -2,29 +2,27 @@ import React from 'react';
 import Chart from 'components/chart/chart.component';
 import NewCases from 'components/new-cases/new-cases.component';
 import { Container, Col, Row } from 'react-bootstrap';
-// import * as d3 from 'd3';
 import axios from 'axios';
 import './homepage.styles.scss';
 
 const { REACT_APP_VERSION, REACT_APP_GEOLOCATION_DB_API_KEY } = process.env;
-
 class Homepage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      countries: [],
+      country: null, // the user's country of origin
       newCases: [],
-      country: null,
       searchString: ''
     };
     // this.canvas = React.createRef();
   }
 
   componentDidMount() {
-    // console.log('xxxx', this.graphContainer.clientWidth);
-    // get new cases today
-    axios.get('https://coronavirus-19-api.herokuapp.com/countries').then((response) => {
-      let newCases = response.data;
-      this.setState({ newCases });
+    // get countries
+    axios.get('https://api.covid19api.com/countries').then((response) => {
+      let countries = response.data;
+      this.setState({ countries });
     });
 
     // get user location
@@ -53,15 +51,19 @@ class Homepage extends React.Component {
           <Col lg="10" className="main">
             <Row>
               <Col lg="4">
-                <NewCases
-                  data={newCases}
-                  handleSelect={this.handleSelect}
-                  country={country}
-                  handleSearch={this.handleSearch}
-                  searchString={searchString}
-                />
+                <NewCases data={newCases} country={country} />
               </Col>
-              <Col lg="8">{country ? <Chart country={country} /> : null}</Col>
+              <Col lg="8">
+                {country ? (
+                  <Chart
+                    data={newCases}
+                    country={country}
+                    handleSelect={this.handleSelect}
+                    handleSearch={this.handleSearch}
+                    searchString={searchString}
+                  />
+                ) : null}
+              </Col>
             </Row>
           </Col>
           <Col lg="2" className="sidebar">
