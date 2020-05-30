@@ -4,9 +4,13 @@ import Loader from 'components/loader.component';
 import Canvas from 'components/canvas/canvas.component';
 import SVGLine from 'components/svg-line/svg-line.component';
 import CountrySelector from 'components/country-selector/country-selector.component';
-import countryData from 'countries';
-import axios from 'axios';
-import find from 'lodash/find';
+import sortBy from 'lodash/sortBy';
+import { Alert } from 'react-bootstrap';
+// import World from 'components/world/world.component';
+import Heading from 'components/heading/heading.component';
+
+import { connect } from 'react-redux';
+import { Creators } from 'modules/ducks/cases.actions';
 
 import './chart-component.styles.scss';
 
@@ -15,8 +19,7 @@ class Chart extends React.Component {
     super(props);
 
     this.state = {
-      isFetching: false,
-      data: [],
+      searchString: '',
       width: 0,
       height: 0
     };
@@ -27,49 +30,48 @@ class Chart extends React.Component {
     this.gutter = 30; // this is constant bootstrap gutter
   }
 
-  async componentDidMount() {
-    const { country } = this.props;
-    this.getTotalDataByCountry(country);
+  handleSelect = (event) => {
+    this.props.setCountryAction(event.target.getAttribute('value'));
+  };
+
+  handleSearch = (event) => {
+    this.setState({ searchString: event.target.value });
+  };
+
+  componentDidMount() {
+    this.setWidth();
+
+    // const countries = this.setUpCountriesData(this.props.herokuData);
+    // this.props.setCountriesAction(countries);
+
+    // this.props.getCasesByCountryAction(this.props.selectedCountry);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps === this.props) return;
-    if (prevProps.country !== this.props.country) {
-      return this.getTotalDataByCountry(this.props.country);
+
+    // set countries data
+    if (prevProps.herokuData !== this.props.herokuData) {
+      // this.props.getCasesByCountryAction(this.props.selectedCountry);
+      const countries = this.setUpCountriesData(this.props.herokuData);
+      this.props.setCountriesAction(countries);
+    }
+
+    // set cases
+    if (prevProps.selectedCountry !== this.props.selectedCountry) {
+      this.props.getCasesByCountryAction(this.props.selectedCountry);
     }
   }
 
-  getCountrySlugFromData = (country) => {
-    try {
-      let c;
-      c = find(countryData, (o) => {
-        if (country === 'USA') return o.Country === 'United States of America';
-        return o.Country === country;
-      });
-      if (c === undefined) return;
-      return c.Slug;
-    } catch (error) {
-      this.setState({ data: [], isFetching: false });
-      console.log(error.message);
-    }
-  };
-
-  getTotalDataByCountry = async (country) => {
-    const countrySlug = this.getCountrySlugFromData(country);
-    this.setState({ data: [], isFetching: true });
-    if (countrySlug === undefined) {
-      this.setState({ isFetching: false });
-      return;
-    }
-    const { data } = await axios.get(`https://api.covid19api.com/dayone/country/${countrySlug}`);
-    this.setState({ data, isFetching: false }, () => {
-      /**
-       * Set the width after data array is populated bacause --
-       * as long as data.length is 0 the canvas ref is not rendered, hence --
-       * the canvas is undefined
-       */
-      this.setWidth();
-    });
+  setUpCountriesData = (herokuData) => {
+    let countries = [];
+    countries = herokuData.map((d) => ({
+      name: d.country,
+      slug: d.country === 'USA' ? 'united-states' : d.country.toLowerCase().split(' ').join('-')
+    }));
+    // sort by country name
+    countries = sortBy(countries, (c) => c.name);
+    return countries;
   };
 
   setWidth = () => {
@@ -79,67 +81,66 @@ class Chart extends React.Component {
     });
   };
 
+  renderChart = ({ casesFromDayOne: data, width, height }) => (
+    <div className="chart-container" style={{ height }}>
+      <Canvas data={data} width={width} height={height} margin={this.margin} />
+      <SVGLine field="Confirmed" data={data} width={width} height={height} margin={this.margin} />
+      <SVGLine field="Recovered" data={data} width={width} height={height} margin={this.margin} />
+      <SVGLine field="Deaths" data={data} width={width} height={height} margin={this.margin} />
+    </div>
+  );
+
   render() {
-    const { data, width, height, isFetching } = this.state;
-    const { data: otherData, handleSelect, country, handleSearch, searchString } = this.props;
+    const { searchString, width, height } = this.state;
+    const { error, isFetching, selectedCountry, casesFromDayOne } = this.props;
+
+    if (isFetching) return <Loader />;
+
+    if (error) return <Alert variant="danger">{error}</Alert>;
 
     return (
       <div ref={this.canvas}>
         <div className="content-wrap-main">
-          <span className="text-muted country-label">{`Country: ${this.props.country}`}</span>
-          <h2 className="mt-2">Data Visualization</h2>
+          {/* <span className="text-muted country-label">Overview of worldwide cases</span>
+          <h2 className="mt-2">World</h2>
+          <World /> */}
+          <Heading small={`Country: ${selectedCountry}`} title="Data Visualization" />
           <CountrySelector
-            data={otherData}
-            handleSelect={handleSelect}
-            selectedCountry={country}
-            handleSearch={handleSearch}
+            isFetching={isFetching}
+            handleSelect={this.handleSelect}
+            selectedCountry={selectedCountry}
+            handleSearch={this.handleSearch}
             searchString={searchString}
           />
         </div>
-
-        {isFetching ? (
-          <Loader />
-        ) : data.length === 0 || !this.props.country ? (
-          <div className="content-wrap-main mt-3">
-            <p>Abiguous or not enough data...</p>
-          </div>
-        ) : (
-          <div className="chart-container" style={{ height }}>
-            <Canvas data={data} width={width} height={height} margin={this.margin} />
-            <SVGLine
-              field="Confirmed"
-              data={data}
-              width={width}
-              height={height}
-              margin={this.margin}
-            />
-            <SVGLine
-              field="Recovered"
-              data={data}
-              width={width}
-              height={height}
-              margin={this.margin}
-            />
-            <SVGLine
-              field="Deaths"
-              data={data}
-              width={width}
-              height={height}
-              margin={this.margin}
-            />
-          </div>
-        )}
+        {casesFromDayOne.length ? this.renderChart({ casesFromDayOne, width, height }) : null}
       </div>
     );
   }
 }
 
 Chart.propTypes = {
-  data: PropTypes.array,
-  country: PropTypes.string,
-  handleSelect: PropTypes.func,
-  handleSearch: PropTypes.func,
-  searchString: PropTypes.string
+  // reducers
+  error: PropTypes.string,
+  isFetching: PropTypes.bool,
+  casesFromDayOne: PropTypes.array,
+  selectedCountry: PropTypes.string,
+  herokuData: PropTypes.array,
+  // actions
+  setCountryAction: PropTypes.func,
+  getCasesByCountryAction: PropTypes.func,
+  setCountriesAction: PropTypes.func
 };
 
-export default Chart;
+const mapStateToProps = (state) => {
+  const { casesFromDayOne, countries } = state.casesReducer;
+  return { casesFromDayOne, countries };
+};
+
+const actions = {
+  setCountryAction: Creators.setCountry,
+  setCountriesAction: Creators.setCountries,
+  getCasesByCountryAction: Creators.getCasesByCountry
+};
+
+export default connect(mapStateToProps, actions)(Chart);

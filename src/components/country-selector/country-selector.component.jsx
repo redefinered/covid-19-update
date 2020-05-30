@@ -1,40 +1,44 @@
 /* eslint-disable react/prop-types */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 import filter from 'lodash/filter';
 import includes from 'lodash/includes';
-import sortBy from 'lodash/sortBy';
+
+import { connect } from 'react-redux';
 
 import './country-selector.styles.css';
 
-const CountrySelector = ({ data, handleSelect, selectedCountry, handleSearch, searchString }) => {
+const CountrySelector = ({
+  isFetching,
+  data,
+  handleSelect,
+  selectedCountry,
+  handleSearch,
+  searchString
+}) => {
   let dropdownItems = [];
-  let filteredData = filter(data, (o) =>
-    includes(o.country.toLowerCase(), searchString.toLowerCase())
-  );
-
-  // sort by country alphabetical
-  filteredData = sortBy(filteredData, (o) => o.country);
+  let filteredData = filter(data, (o) => includes(o.slug, searchString.toLowerCase()));
 
   // eslint-disable-next-line
   filteredData.map((d) => {
     dropdownItems.push(
       <Dropdown.Item
-        value={d.country}
-        key={d.country}
-        active={d.country === selectedCountry}
+        key={d.name}
+        value={d.name}
+        active={d.name === selectedCountry}
         onClick={(event) => handleSelect(event)}
       >
-        {d.country}
+        {d.name}
       </Dropdown.Item>
     );
   });
   return (
     <Dropdown>
-      <Dropdown.Toggle className="btn-lg" variant="primary" id="dropdown-basic">
-        {selectedCountry}
+      <Dropdown.Toggle variant="primary" id="dropdown-basic">
+        {isFetching ? 'Fetching...' : selectedCountry}
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
@@ -52,7 +56,11 @@ const CountrySelector = ({ data, handleSelect, selectedCountry, handleSearch, se
 };
 
 CountrySelector.propTypes = {
-  data: PropTypes.array
+  countries: PropTypes.array
 };
 
-export default CountrySelector;
+const mapStateToProps = ({ casesReducer: { countries } }) => {
+  return { data: countries };
+};
+
+export default connect(mapStateToProps)(CountrySelector);

@@ -24,10 +24,6 @@ class RecentCases extends React.Component {
 
 RecentCases.propTypes = {
   data: PropTypes.array,
-  country: PropTypes.string,
-  handleSelect: PropTypes.func,
-  handleSearch: PropTypes.func,
-  searchString: PropTypes.string
+  country: PropTypes.string
 };
-
 export default RecentCases;

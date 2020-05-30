@@ -2,9 +2,14 @@ import { createActions } from 'reduxsauce';
 
 const { Types, Creators } = createActions(
   {
-    getCountries: [],
-    getCountriesSuccess: ['data'],
-    getCountriesFailure: ['error']
+    getInitialData: [],
+    getInitialDataSuccess: ['data'],
+    getInitialDataFailure: ['error'],
+    setCountry: ['country'],
+    setCountries: ['countries'],
+    getCasesByCountry: ['country'],
+    getCasesByCountrySuccess: ['data'],
+    getCasesByCountryFailure: ['error']
   },
   { prefix: '@Cases/' }
 );

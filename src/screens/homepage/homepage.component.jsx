@@ -1,49 +1,33 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import Loader from 'components/loader.component';
 import Chart from 'components/chart/chart.component';
-import NewCases from 'components/new-cases/new-cases.component';
-import { Container, Col, Row } from 'react-bootstrap';
-import axios from 'axios';
+import Overview from 'components/overview/overview.component';
+import { Container, Col, Row, Alert } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { Creators } from 'modules/ducks/cases.actions';
+
 import './homepage.styles.scss';
 
-const { REACT_APP_VERSION, REACT_APP_GEOLOCATION_DB_API_KEY } = process.env;
+const { REACT_APP_VERSION } = process.env;
 class Homepage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      countries: [],
-      country: null, // the user's country of origin
-      newCases: [],
       searchString: ''
     };
-    // this.canvas = React.createRef();
   }
 
-  componentDidMount() {
-    // get countries
-    axios.get('https://api.covid19api.com/countries').then((response) => {
-      let countries = response.data;
-      this.setState({ countries });
-    });
-
-    // get user location
-    axios
-      .get(`https://geolocation-db.com/json/${REACT_APP_GEOLOCATION_DB_API_KEY}`)
-      .then((response) => {
-        console.log('location', response.data);
-        this.setState({ country: response.data.country_name || 'World' });
-      });
+  async componentDidMount() {
+    await this.props.getInitialDataAction();
   }
-
-  handleSelect = (event) => {
-    this.setState({ country: event.target.getAttribute('value') });
-  };
-
-  handleSearch = (event) => {
-    this.setState({ searchString: event.target.value });
-  };
 
   render() {
-    const { newCases, country, searchString } = this.state;
+    const { error, isFetching, herokuData, selectedCountry } = this.props;
+
+    if (isFetching) return <Loader />;
+
+    if (error) return <Alert variant="danger">{error}</Alert>;
 
     return (
       <Container fluid>
@@ -51,18 +35,15 @@ class Homepage extends React.Component {
           <Col lg="10" className="main">
             <Row>
               <Col lg="4">
-                <NewCases data={newCases} country={country} />
+                <Overview country={selectedCountry} data={herokuData} />
               </Col>
               <Col lg="8">
-                {country ? (
-                  <Chart
-                    data={newCases}
-                    country={country}
-                    handleSelect={this.handleSelect}
-                    handleSearch={this.handleSearch}
-                    searchString={searchString}
-                  />
-                ) : null}
+                <Chart
+                  error={error}
+                  selectedCountry={selectedCountry}
+                  isFetching={isFetching}
+                  herokuData={herokuData}
+                />
               </Col>
             </Row>
           </Col>
@@ -78,4 +59,31 @@ class Homepage extends React.Component {
   }
 }
 
-export default Homepage;
+Homepage.propTypes = {
+  // reducers
+  error: PropTypes.string,
+  isFetching: PropTypes.bool,
+  selectedCountry: PropTypes.string,
+  herokuData: PropTypes.array,
+  casesFromDayOne: PropTypes.array,
+  // actions
+  getInitialDataAction: PropTypes.func
+};
+
+const mapStateToProps = (state) => {
+  const {
+    error,
+    isFetching,
+    cases,
+    country: selectedCountry,
+    herokuAllStatus: herokuData,
+    casesFromDayOne
+  } = state.casesReducer;
+  return { error, isFetching, cases, selectedCountry, herokuData, casesFromDayOne };
+};
+
+const actions = {
+  getInitialDataAction: Creators.getInitialData
+};
+
+export default connect(mapStateToProps, actions)(Homepage);

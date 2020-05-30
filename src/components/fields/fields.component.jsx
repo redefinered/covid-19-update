@@ -4,7 +4,7 @@ import Field from 'components/field/field.component';
 import { Row, Col } from 'react-bootstrap';
 import find from 'lodash/find';
 
-const Fields = ({ country, data }) => {
+const Fields = ({ data, country }) => {
   const selectedItem = find(data, (d) => d.country === country);
   const fields = Object.keys(selectedItem);
   const includedFields = [

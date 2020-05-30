@@ -4,13 +4,13 @@ import { Card } from 'react-bootstrap';
 
 import './field.styles.css';
 
-const Field = ({ title, value, color }) => {
+const Field = ({ title, value, color, light }) => {
   const formatNumber = (num) => {
     if (!num) return 0;
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
   };
   return (
-    <Card text="white" bg={color} className="mb-4">
+    <Card text={light ? 'black' : 'white'} bg={color} className="mb-4">
       <Card.Body className="text-center my-4">
         <Card.Title>
           <strong>{title}</strong>
@@ -24,7 +24,8 @@ const Field = ({ title, value, color }) => {
 Field.propTypes = {
   title: PropTypes.string.isRequired,
   value: PropTypes.number.isRequired,
-  color: PropTypes.string.isRequired
+  color: PropTypes.string.isRequired,
+  light: PropTypes.bool
 };
 
 export default Field;
