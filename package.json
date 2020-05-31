@@ -32,8 +32,7 @@
     "eject": "react-scripts eject",
     "prerelease": "npm version prerelease",
     "predeploy": "yarn build",
-    "deploy": "gh-pages -d build",
-    "deploy:stage": "gh-pages -d build -r 'https://github.com/redefinered/covid-19-update-staging.git'"
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
