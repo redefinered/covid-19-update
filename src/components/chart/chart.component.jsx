@@ -22,7 +22,7 @@ class Chart extends React.Component {
       height: 0
     };
 
-    this.margin = { top: 40, right: 0, bottom: 20, left: 30 };
+    this.margin = { top: 40, right: 0, bottom: 20, left: 0 };
 
     this.canvas = React.createRef();
     this.gutter = 30; // this is constant bootstrap gutter
@@ -60,7 +60,11 @@ class Chart extends React.Component {
     const { searchString, width, height } = this.state;
     const { error, isFetching, selectedCountry, casesFromDayOne } = this.props;
 
-    if (isFetching) return <Loader />;
+    const alert = (
+      <Alert className="mt-3" variant="warning">
+        No data
+      </Alert>
+    );
 
     if (error) return <Alert variant="danger">{error}</Alert>;
 
@@ -74,7 +78,15 @@ class Chart extends React.Component {
           handleSearch={this.handleSearch}
           searchString={searchString}
         />
-        {casesFromDayOne.length ? this.renderChart({ casesFromDayOne, width, height }) : null}
+        {!isFetching ? (
+          casesFromDayOne.length ? (
+            this.renderChart({ casesFromDayOne, width, height })
+          ) : (
+            alert
+          )
+        ) : (
+          <Loader />
+        )}
       </div>
     );
   }
