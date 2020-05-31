@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 import Loader from 'components/loader.component';
 import Chart from 'components/chart/chart.component';
 import Overview from 'components/overview/overview.component';
+import MostCases from 'components/most-cases/most-cases.component';
 import { Container, Col, Row, Alert } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Creators } from 'modules/ducks/cases.actions';
+import { setUpCountriesData } from './homepage.utils';
+import find from 'lodash/find';
 
 import './homepage.styles.scss';
 
@@ -22,6 +25,20 @@ class Homepage extends React.Component {
     await this.props.getInitialDataAction();
   }
 
+  componentDidUpdate(prevProps) {
+    // set countries data
+    if (prevProps.herokuData !== this.props.herokuData) {
+      const countries = setUpCountriesData(this.props.herokuData);
+      this.props.setCountriesAction(countries);
+    }
+
+    // set cases
+    if (prevProps.selectedCountry !== this.props.selectedCountry) {
+      let { slug } = find(this.props.countries, (c) => c.name === this.props.selectedCountry);
+      this.props.getCasesByCountryAction(slug);
+    }
+  }
+
   render() {
     const { error, isFetching, herokuData, selectedCountry } = this.props;
 
@@ -31,8 +48,8 @@ class Homepage extends React.Component {
 
     return (
       <Container fluid>
-        <Row>
-          <Col lg="10" className="main">
+        <Row className="my-3">
+          <Col lg="9" className="main">
             <Row>
               <Col lg="4">
                 <Overview country={selectedCountry} data={herokuData} />
@@ -47,8 +64,9 @@ class Homepage extends React.Component {
               </Col>
             </Row>
           </Col>
-          <Col lg="2" className="sidebar">
+          <Col lg="3" className="sidebar">
             {/* sidebar here */}
+            <MostCases />
           </Col>
         </Row>
         <footer className="py-3">
@@ -64,10 +82,12 @@ Homepage.propTypes = {
   error: PropTypes.string,
   isFetching: PropTypes.bool,
   selectedCountry: PropTypes.string,
+  countries: PropTypes.array,
   herokuData: PropTypes.array,
-  casesFromDayOne: PropTypes.array,
   // actions
-  getInitialDataAction: PropTypes.func
+  getInitialDataAction: PropTypes.func,
+  getCasesByCountryAction: PropTypes.func,
+  setCountriesAction: PropTypes.func
 };
 
 const mapStateToProps = (state) => {
@@ -76,14 +96,16 @@ const mapStateToProps = (state) => {
     isFetching,
     cases,
     country: selectedCountry,
-    herokuAllStatus: herokuData,
-    casesFromDayOne
+    countries,
+    herokuAllStatus: herokuData
   } = state.casesReducer;
-  return { error, isFetching, cases, selectedCountry, herokuData, casesFromDayOne };
+  return { error, isFetching, cases, selectedCountry, countries, herokuData };
 };
 
 const actions = {
-  getInitialDataAction: Creators.getInitialData
+  getInitialDataAction: Creators.getInitialData,
+  setCountriesAction: Creators.setCountries,
+  getCasesByCountryAction: Creators.getCasesByCountry
 };
 
 export default connect(mapStateToProps, actions)(Homepage);

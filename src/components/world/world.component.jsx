@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Field from 'components/field/field.component';
-import { Row, Col } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import find from 'lodash/find';
 import { connect } from 'react-redux';
+import { formatNumber } from 'app.utlis';
 
 const World = ({ data }) => {
-  const selectedItem = find(data, (d) => d.country === 'World');
-  const fields = Object.keys(selectedItem);
+  const worldcases = find(data, (d) => d.country === 'World');
+  // const fields = Object.keys(worldcases);
   const includedFields = [
     { key: 'cases', label: 'Total Cases', variant: 'light' },
     { key: 'todayCases', label: 'New Cases', variant: 'light' },
@@ -17,26 +17,22 @@ const World = ({ data }) => {
 
   return (
     <React.Fragment>
-      <Row>
-        {/* eslint-disable-next-line array-callback-return */}
-        {fields.map((field) => {
-          let include = find(includedFields, (o) => {
-            return o.key === field;
-          });
-          if (include !== undefined) {
-            return (
-              <Col key={field}>
-                <Field
-                  title={include.label}
-                  value={selectedItem[field]}
-                  color={include.variant}
-                  light
-                />
-              </Col>
-            );
-          }
-        })}
-      </Row>
+      <Table bordered size="sm">
+        <thead>
+          <tr>
+            {includedFields.map((f) => {
+              return <th key={f.key}>{f.label}</th>;
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {includedFields.map((f) => {
+              return <td key={f.key}>{formatNumber(worldcases[f.key])}</td>;
+            })}
+          </tr>
+        </tbody>
+      </Table>
     </React.Fragment>
   );
 };

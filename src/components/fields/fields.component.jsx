@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Field from 'components/field/field.component';
+import Heading from 'components/heading/heading.component';
 import { Row, Col } from 'react-bootstrap';
 import find from 'lodash/find';
 
@@ -16,6 +17,7 @@ const Fields = ({ data, country }) => {
 
   return (
     <React.Fragment>
+      <Heading small={`Cases in ${country}`} title="Country Overview" />
       <Row>
         {/* eslint-disable-next-line array-callback-return */}
         {fields.map((field) => {

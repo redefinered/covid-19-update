@@ -4,9 +4,8 @@ import Loader from 'components/loader.component';
 import Canvas from 'components/canvas/canvas.component';
 import SVGLine from 'components/svg-line/svg-line.component';
 import CountrySelector from 'components/country-selector/country-selector.component';
-import sortBy from 'lodash/sortBy';
 import { Alert } from 'react-bootstrap';
-// import World from 'components/world/world.component';
+import World from 'components/world/world.component';
 import Heading from 'components/heading/heading.component';
 
 import { connect } from 'react-redux';
@@ -40,44 +39,12 @@ class Chart extends React.Component {
 
   componentDidMount() {
     this.setWidth();
-
-    // const countries = this.setUpCountriesData(this.props.herokuData);
-    // this.props.setCountriesAction(countries);
-
-    // this.props.getCasesByCountryAction(this.props.selectedCountry);
   }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps === this.props) return;
-
-    // set countries data
-    if (prevProps.herokuData !== this.props.herokuData) {
-      // this.props.getCasesByCountryAction(this.props.selectedCountry);
-      const countries = this.setUpCountriesData(this.props.herokuData);
-      this.props.setCountriesAction(countries);
-    }
-
-    // set cases
-    if (prevProps.selectedCountry !== this.props.selectedCountry) {
-      this.props.getCasesByCountryAction(this.props.selectedCountry);
-    }
-  }
-
-  setUpCountriesData = (herokuData) => {
-    let countries = [];
-    countries = herokuData.map((d) => ({
-      name: d.country,
-      slug: d.country === 'USA' ? 'united-states' : d.country.toLowerCase().split(' ').join('-')
-    }));
-    // sort by country name
-    countries = sortBy(countries, (c) => c.name);
-    return countries;
-  };
 
   setWidth = () => {
     this.setState({
       width: this.canvas.current.clientWidth,
-      height: 500
+      height: 400
     });
   };
 
@@ -101,10 +68,9 @@ class Chart extends React.Component {
     return (
       <div ref={this.canvas}>
         <div className="content-wrap-main">
-          {/* <span className="text-muted country-label">Overview of worldwide cases</span>
-          <h2 className="mt-2">World</h2>
-          <World /> */}
-          <Heading small={`Country: ${selectedCountry}`} title="Data Visualization" />
+          <Heading small="Worldwide" title="World Overview" />
+          <World />
+          <Heading small="What the curve looks like" title="Data Visualization" />
           <CountrySelector
             isFetching={isFetching}
             handleSelect={this.handleSelect}
@@ -127,20 +93,16 @@ Chart.propTypes = {
   selectedCountry: PropTypes.string,
   herokuData: PropTypes.array,
   // actions
-  setCountryAction: PropTypes.func,
-  getCasesByCountryAction: PropTypes.func,
-  setCountriesAction: PropTypes.func
+  setCountryAction: PropTypes.func
 };
 
 const mapStateToProps = (state) => {
-  const { casesFromDayOne, countries } = state.casesReducer;
-  return { casesFromDayOne, countries };
+  const { casesFromDayOne } = state.casesReducer;
+  return { casesFromDayOne };
 };
 
 const actions = {
-  setCountryAction: Creators.setCountry,
-  setCountriesAction: Creators.setCountries,
-  getCasesByCountryAction: Creators.getCasesByCountry
+  setCountryAction: Creators.setCountry
 };
 
 export default connect(mapStateToProps, actions)(Chart);

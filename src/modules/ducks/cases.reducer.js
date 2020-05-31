@@ -37,7 +37,8 @@ export default createReducer(defaultState, {
       ...state,
       isFetching: false,
       country,
-      herokuAllStatus
+      herokuAllStatus,
+      error: null
     };
   },
   [Types.GET_INITIAL_DATA_FAILURE]: (state, action) => {
@@ -58,7 +59,8 @@ export default createReducer(defaultState, {
     return {
       ...state,
       isFetching: false,
-      casesFromDayOne
+      casesFromDayOne,
+      error: null
     };
   },
   [Types.GET_CASES_BY_COUNTRY_FAILURE]: (state, action) => {
