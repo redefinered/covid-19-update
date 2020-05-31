@@ -18,7 +18,7 @@ const createAppStore = () => {
 
   if (isProduction) {
     // Producction middlewares
-    middleware = applyMiddleware(sagaMiddleware, routerMiddleware);
+    middleware = applyMiddleware(sagaMiddleware);
   } else {
     // define the logger
     const logger = createLogger({ collapsed: true });
