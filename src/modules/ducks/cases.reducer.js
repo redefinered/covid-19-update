@@ -4,6 +4,7 @@ import { Types } from './cases.actions';
 const defaultState = {
   error: null,
   isFetching: false,
+  isFetchingGrahpData: false,
   country: null,
   countries: [],
   casesFromDayOne: [],
@@ -51,14 +52,14 @@ export default createReducer(defaultState, {
   [Types.GET_CASES_BY_COUNTRY]: (state) => {
     return {
       ...state,
-      isFetching: true
+      isFetchingGrahpData: true
     };
   },
   [Types.GET_CASES_BY_COUNTRY_SUCCESS]: (state, action) => {
     const { casesFromDayOne } = action.data;
     return {
       ...state,
-      isFetching: false,
+      isFetchingGrahpData: false,
       casesFromDayOne,
       error: null
     };
@@ -66,7 +67,7 @@ export default createReducer(defaultState, {
   [Types.GET_CASES_BY_COUNTRY_FAILURE]: (state, action) => {
     return {
       ...state,
-      isFetching: false,
+      isFetchingGrahpData: false,
       error: action.error
     };
   }

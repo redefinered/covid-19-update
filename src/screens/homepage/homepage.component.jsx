@@ -28,7 +28,6 @@ class Homepage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('props', this.props);
     // set countries data
     if (prevProps.herokuData !== this.props.herokuData) {
       const countries = setUpCountriesData(this.props.herokuData);
@@ -52,7 +51,7 @@ class Homepage extends React.Component {
   }
 
   render() {
-    const { error, isFetching, herokuData, selectedCountry, countries } = this.props;
+    const { error, isFetching, isFetchingGrahpData, herokuData, selectedCountry, countries } = this.props;
 
     if (isFetching || !selectedCountry || herokuData.length === 0) return <Loader />;
 
@@ -73,7 +72,7 @@ class Homepage extends React.Component {
                   error={error}
                   countries={countries}
                   selectedCountry={selectedCountry}
-                  isFetching={isFetching}
+                  isFetching={isFetchingGrahpData}
                   herokuData={herokuData}
                 />
               </Col>
@@ -96,6 +95,7 @@ Homepage.propTypes = {
   // reducers
   error: PropTypes.string,
   isFetching: PropTypes.bool,
+  isFetchingGrahpData: PropTypes.bool,
   selectedCountry: PropTypes.string,
   countries: PropTypes.array,
   herokuData: PropTypes.array,
@@ -109,11 +109,12 @@ const mapStateToProps = (state) => {
   const {
     error,
     isFetching,
+    isFetchingGrahpData,
     country: selectedCountry,
     countries,
     herokuAllStatus: herokuData
   } = state.casesReducer;
-  return { error, isFetching, selectedCountry, countries, herokuData };
+  return { error, isFetching, isFetchingGrahpData, selectedCountry, countries, herokuData };
 };
 
 const actions = {
