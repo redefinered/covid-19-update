@@ -1,6 +1,6 @@
 {
   "name": "covid-19-update",
-  "version": "1.0.1",
+  "version": "1.0.2-beta.0",
   "private": true,
   "homepage": "https://simplecovid19updates.com",
   "dependencies": {
