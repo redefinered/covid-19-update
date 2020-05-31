@@ -9,10 +9,10 @@ const Fields = ({ data, country }) => {
   const selectedItem = find(data, (d) => d.country === country);
   const fields = Object.keys(selectedItem);
   const includedFields = [
-    { key: 'cases', label: 'Total Cases', variant: 'info' },
+    { key: 'cases', label: 'Confirmed Cases', variant: 'info' },
     { key: 'todayCases', label: 'New Cases', variant: 'warning' },
-    { key: 'deaths', label: 'Total Deaths', variant: 'danger' },
-    { key: 'recovered', label: 'Total Recoveries', variant: 'success' }
+    { key: 'deaths', label: 'Deaths', variant: 'danger' },
+    { key: 'recovered', label: 'Recoveries', variant: 'success' }
   ];
 
   return (

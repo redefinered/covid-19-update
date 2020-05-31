@@ -1,0 +1,18 @@
+@import "~bootstrap/scss/bootstrap";
+
+tr {
+  th {
+    &.cases-label {
+      color: $info
+    }
+    &.todayCases-label {
+      color: $warning
+    }
+    &.deaths-label {
+      color: $danger
+    }
+    &.recovered-label {
+      color: $success
+    }
+  }
+}

@@ -9,7 +9,6 @@ import slice from 'lodash/slice';
 
 const MostCases = ({ data }) => {
   const cases = slice(data, 1, 11);
-  console.log('x', cases.length);
   return (
     <React.Fragment>
       <Heading small="10 countries with most cases" title="Largest Cases" />

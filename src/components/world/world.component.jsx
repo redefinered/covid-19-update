@@ -5,14 +5,15 @@ import find from 'lodash/find';
 import { connect } from 'react-redux';
 import { formatNumber } from 'app.utlis';
 
+import './world.styles.scss';
+
 const World = ({ data }) => {
   const worldcases = find(data, (d) => d.country === 'World');
-  // const fields = Object.keys(worldcases);
   const includedFields = [
-    { key: 'cases', label: 'Total Cases', variant: 'light' },
+    { key: 'cases', label: 'Confirmed Cases', variant: 'light' },
     { key: 'todayCases', label: 'New Cases', variant: 'light' },
-    { key: 'deaths', label: 'Total Deaths', variant: 'light' },
-    { key: 'recovered', label: 'Total Recoveries', variant: 'light' }
+    { key: 'deaths', label: 'Deaths', variant: 'light' },
+    { key: 'recovered', label: 'Recoveries', variant: 'light' }
   ];
 
   return (
@@ -21,7 +22,11 @@ const World = ({ data }) => {
         <thead>
           <tr>
             {includedFields.map((f) => {
-              return <th key={f.key}>{f.label}</th>;
+              return (
+                <th key={f.key} className={`${f.key}-label`}>
+                  {f.label}
+                </th>
+              );
             })}
           </tr>
         </thead>

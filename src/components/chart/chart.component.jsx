@@ -5,7 +5,6 @@ import Canvas from 'components/canvas/canvas.component';
 import SVGLine from 'components/svg-line/svg-line.component';
 import CountrySelector from 'components/country-selector/country-selector.component';
 import { Alert } from 'react-bootstrap';
-import World from 'components/world/world.component';
 import Heading from 'components/heading/heading.component';
 
 import { connect } from 'react-redux';
@@ -67,18 +66,14 @@ class Chart extends React.Component {
 
     return (
       <div ref={this.canvas}>
-        <div className="content-wrap-main">
-          <Heading small="Worldwide" title="World Overview" />
-          <World />
-          <Heading small="What the curve looks like" title="Data Visualization" />
-          <CountrySelector
-            isFetching={isFetching}
-            handleSelect={this.handleSelect}
-            selectedCountry={selectedCountry}
-            handleSearch={this.handleSearch}
-            searchString={searchString}
-          />
-        </div>
+        <Heading small="What the curve looks like" title="Data Visualization" />
+        <CountrySelector
+          isFetching={isFetching}
+          handleSelect={this.handleSelect}
+          selectedCountry={selectedCountry}
+          handleSearch={this.handleSearch}
+          searchString={searchString}
+        />
         {casesFromDayOne.length ? this.renderChart({ casesFromDayOne, width, height }) : null}
       </div>
     );
