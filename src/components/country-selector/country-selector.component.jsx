@@ -37,7 +37,7 @@ const CountrySelector = ({
   });
   return (
     <Dropdown>
-      <Dropdown.Toggle variant="primary" id="dropdown-basic">
+      <Dropdown.Toggle disabled={isFetching} variant="primary" id="dropdown-basic">
         {isFetching ? 'Fetching...' : selectedCountry}
       </Dropdown.Toggle>
 
