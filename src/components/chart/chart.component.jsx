@@ -48,7 +48,7 @@ class Chart extends React.Component {
   };
 
   renderChart = ({ casesFromDayOne: data, width, height }) => (
-    <div className="chart-container" style={{ height }}>
+    <div className="chart-container mb-4" style={{ height }}>
       <Canvas data={data} width={width} height={height} margin={this.margin} />
       <SVGLine field="Confirmed" data={data} width={width} height={height} margin={this.margin} />
       <SVGLine field="Recovered" data={data} width={width} height={height} margin={this.margin} />
