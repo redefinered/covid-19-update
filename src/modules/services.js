@@ -1,11 +1,9 @@
 import axios from 'axios';
 
-const { REACT_APP_GEOLOCATION_DB_API_KEY, REACT_APP_API_URL } = process.env;
-
 export const getGeolocation = async () => {
   try {
     let { data } = await axios.get(
-      `https://geolocation-db.com/json/${REACT_APP_GEOLOCATION_DB_API_KEY}`
+      'https://geolocation-db.com/json/0f761a30-fe14-11e9-b59f-e53803842572'
     );
     return data;
   } catch (error) {
@@ -15,7 +13,7 @@ export const getGeolocation = async () => {
 
 export const getCasesByCountry = async (country) => {
   try {
-    let { data } = await axios.get(`${REACT_APP_API_URL}/dayone/country/${country}`);
+    let { data } = await axios.get(`https://api.covid19api.com/dayone/country/${country}`);
     return data;
   } catch (error) {
     throw new Error(error);
