@@ -51,9 +51,17 @@ class Homepage extends React.Component {
   }
 
   render() {
-    const { error, isFetching, isFetchingGrahpData, herokuData, selectedCountry, countries } = this.props;
+    const {
+      error,
+      isFetching,
+      isFetchingGrahpData,
+      herokuData,
+      selectedCountry,
+      countries
+    } = this.props;
 
-    if (isFetching || !selectedCountry || herokuData.length === 0) return <Loader />;
+    if (isFetching || !selectedCountry || herokuData.length === 0)
+      return <Loader description="Getting data ready..." />;
 
     if (error) return <Alert variant="danger">{error}</Alert>;
 
